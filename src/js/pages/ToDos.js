@@ -7,50 +7,54 @@ import TodoStore from '../stores/TodoStore';
 export default class ToDos extends React.Component {
     constructor(props) {
         super(props);
+        this.getTodos = this.getTodos.bind(this);
         this.state = {
             todos: TodoStore.getAll(),
         }
     }
-    
+
     componentWillMount() {
-        TodoStore.on("change", () => {
-            this.setState({
-                todos: TodoStore.getAll()
-            })
-        })
-    } 
+        TodoStore.on("change", this.getTodos);
+        console.log("count:", TodoStore.listenerCount("emit"));
+    }
+    componentWillUnmount() {
+        TodoStore.removeListener("change", this.getTodos);
+    }
+    getTodos() {
+        this.setState({
+            todos: TodoStore.getAll()
+        });
+    }
 
     render() {
         return (
             <div>
-             <h1>React ToDos App</h1>
-                <CreateToDo  todos={this.state.todos} createTask={this.createTask.bind(this)}/>
+                <button type="btn btn-default" onClick={this.loadAsync.bind(this)}>Load Async Todos</button>
+                <CreateToDo todos={this.state.todos} createTask={this.createTask.bind(this)} />
                 <ToDosList
-                 todos={this.state.todos} 
-                 toggleTask={this.toggleTask.bind(this)}
-                 saveTask={this.saveTask.bind(this)}
-                 deleteTask={this.deleteTask.bind(this)}
-                 />
+                    todos={this.state.todos}
+                    toggleTask={this.toggleTask.bind(this)}
+                    saveTask={this.saveTask.bind(this)}
+                    deleteTask={this.deleteTask.bind(this)}
+                    />
             </div>
         )
     }
-    toggleTask(task) {
-        const foundTodo = _.find(this.state.todos, todo => todo.task === task);
-        foundTodo.isCompleted = !foundTodo.isCompleted;
-        this.setState({ todos: this.state.todos });
 
+    loadAsync() {
+        TodoActions.loadTodos();
+    }
+    toggleTask(task) {
+        TodoActions.toggleTodo(task);
     }
     createTask(task) {
-        TodoActions.createTodo(task);        
+        TodoActions.createTodo(task);
     }
     saveTask(oldTask, newTask) {
-        const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);
-        foundTodo.task = newTask;
-        this.setState({ todos: this.state.todos });
+        TodoActions.saveTodo(oldTask, newTask);
     }
-    deleteTask(taskToDelete) {
-        _.remove(this.state.todos, todo => todo.task === taskToDelete);
-        this.setState({ todos: this.state.todos });
+    deleteTask(id) {
+        TodoActions.deleteTodo(id);
     }
 
 }

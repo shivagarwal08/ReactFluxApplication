@@ -62,6 +62,14 @@ class TodoStore extends EventEmitter {
             }
             case "TOGGLE_TODO": {
                 this.toggleTodo(action.task);
+                break;
+            }
+            case "FETCH_TODOS": break;
+            case "FETCH_TODOS_ERROR": break;
+            case "RECEIVED_TODOS": {
+                this.todos = this.todos.concat(action.todos);
+                this.emit("change");
+                break;
             }
         }
     }

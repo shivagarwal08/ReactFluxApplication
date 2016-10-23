@@ -28,3 +28,28 @@ export function toggleTodo(task) {
         task
     })
 }
+
+export function loadTodos() {
+    dispatcher.dispatch({ type: "FETCH_TODOS" });
+
+    setTimeout(() => {
+        dispatcher.dispatch({
+            type: "RECEIVED_TODOS",
+            todos: [
+                {
+                    id: 445566778,
+                    task: "Go Shopping Again",
+                    isCompleted: false
+                },
+                {
+                    id: 556677889,
+                    task: "Pay Water Bills Again",
+                    isCompleted: false
+                }]
+        });
+        let ifError; 
+        if (ifError) {
+            dispatcher.dispatch({type: "FETCH_TODOS_ERROR", error: "Failed!!!" });
+        }
+    }, 1000);
+}
