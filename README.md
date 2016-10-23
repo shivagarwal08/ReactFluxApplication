@@ -1,7 +1,10 @@
 # Reference LearnCode.academy
 # ReactAdvanceApplication
 git-commands
-git add
+git add *
+git commit -m "Initial Commit"
+git push
+
 commands
 webpack-dev-server
 webpack-dev-server --watch

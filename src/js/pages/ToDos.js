@@ -1,28 +1,29 @@
 import React from 'react';
 import CreateToDo from '../components/todo/create-todo';
 import ToDosList from '../components/todo/todos-list';
+import * as TodoActions from "../actions/TodoActions";
+import TodoStore from '../stores/TodoStore';
 
-const todos = [
-    {
-        task: 'make React tutorial',
-        isCompleted: false
-    },
-    {
-        task: 'eat dinner',
-        isCompleted: true
-    }
-];
 export default class ToDos extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos
+            todos: TodoStore.getAll(),
         }
-
     }
+    
+    componentWillMount() {
+        TodoStore.on("change", () => {
+            this.setState({
+                todos: TodoStore.getAll()
+            })
+        })
+    } 
+
     render() {
         return (
-            <div> <h1>React ToDos App</h1>
+            <div>
+             <h1>React ToDos App</h1>
                 <CreateToDo  todos={this.state.todos} createTask={this.createTask.bind(this)}/>
                 <ToDosList
                  todos={this.state.todos} 
@@ -40,10 +41,7 @@ export default class ToDos extends React.Component {
 
     }
     createTask(task) {
-        this.state.todos.push (
-            {task, isCompleted: false}
-        );
-        this.setState({ todos: this.state.todos });
+        TodoActions.createTodo(task);        
     }
     saveTask(oldTask, newTask) {
         const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);

@@ -6,7 +6,7 @@ import Archives from "./pages/Archives";
 import Featured from "./pages/Featured";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
-import ToDos from "./pages/ToDos";
+import ToDos from "./pages/Todos";
 
 const app = document.getElementById('app');
 ReactDOM.render(
